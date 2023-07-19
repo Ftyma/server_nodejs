@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Users = require("../../models/userModel");
-//const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const { generateToken } = require("../../config/jwtToken");
 
 router.post("/signup", async (req, res) => {
@@ -17,14 +17,14 @@ router.post("/signup", async (req, res) => {
     }
 
     //hash password
-    //const saltRounds = 10;
-    //const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const user = await Users.create({
       uid,
       username,
       email,
-      //password: hashedPassword,
+      password: hashedPassword,
     });
     res.status(200).json(user);
   } catch (error) {
@@ -46,10 +46,10 @@ router.post("/signin", async (req, res) => {
     }
 
     //check password
-    // const passwordValid = await bcrypt.compare(password, user.password);
-    // if (!passwordValid) {
-    //   return res.status(401).json({ message: "Invalid password" });
-    // }
+    const passwordValid = await bcrypt.compare(password, user.password);
+    if (!passwordValid) {
+      return res.status(401).json({ message: "Invalid password" });
+    }
 
     return res.status(200).json({
       uid: user?.uid,
