@@ -31,8 +31,11 @@ app.use("/userCarts", clientCartsRouter);
 app.use("/userProducts", clientProductsRouter);
 app.use("/userOrders", clientOrdersRouter);
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 8000;
 
+app.get("/", async (req, res) => {
+  res.json("helo");
+});
 mongoose
   .connect(
     "mongodb+srv://admin:admin12345@cluster0.avq7kyp.mongodb.net/Thaibev?retryWrites=true&w=majority"
